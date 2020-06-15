@@ -69,7 +69,9 @@ geojson = dlx.geojson(data, id="geojson", defaultOptions=options, style=get_styl
 info = html.Div(children=get_info(), id="info", className="info",
                 style={"position": "absolute", "top": "10px", "right": "10px", "z-index": "1000", "background":"white"})
 # Create app.
-app = dash.Dash(prevent_initial_callbacks=True)
+server = flask.Flask(__name__)
+server.secret_key = os.environ.get('secret_key', str(randint(0, 1000000)))
+app = dash.Dash(__name__, server=server)
 app.layout = html.Div([html.H1("CU Boulder Density Map"),dl.Map(children=[dl.TileLayer(), geojson, colorbar, info], center=[40.006, -105.266], zoom=16),html.Div(className='row', children=[
         html.Div([
             dcc.Markdown("""
@@ -92,6 +94,5 @@ def info_hover(feature):
 def display_click_data(feature):
     return feature["id"]
 
-
 if __name__ == '__main__':
-    app.run_server()
+    app.run_server(debug=True, threaded=True)
