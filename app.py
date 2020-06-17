@@ -315,12 +315,13 @@ def getBuildingData2(bName,val):
     #med = np.median(ys)
 
     #Uncomment for threshold
+    """
     fig.add_trace(go.Scatter(
         x=[xs[int(len(xs)/2)-1]],
         y=[29],
         text=["Occupancy Threshold"],
         mode="text",
-    ))
+    ))"""
     fig.update_layout(title=bName + " Occupancy over Time",shapes=[
     dict(
       type= 'line',
