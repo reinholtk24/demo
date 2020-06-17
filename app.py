@@ -10,7 +10,12 @@ from pandas.io.json import json_normalize
 import plotly.graph_objects as go
 import numpy as np
 import datetime 
-import calendar 
+import calendar
+import os
+from random import randint
+
+import plotly.plotly as py
+from plotly.graph_objs import *
   
 def findDay(date):
     date = date.replace("-"," ")
