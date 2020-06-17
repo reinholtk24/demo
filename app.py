@@ -315,12 +315,13 @@ def getBuildingData2(bName,val):
     #med = np.median(ys)
 
     #Uncomment for threshold
+    """
     fig.add_trace(go.Scatter(
         x=[xs[int(len(xs)/2)-1]],
         y=[29],
         text=["Occupancy Threshold"],
         mode="text",
-    ))
+    ))"""
     fig.update_layout(title=bName + " Occupancy over Time",shapes=[
     dict(
       type= 'line',
@@ -412,7 +413,7 @@ app.layout = html.Div([html.H1("CU Boulder Occupancy Map 2020"),dl.Map(id="map",
         6: 'Sat 06-06',
         7: 'Sun 07-06',
         8: 'Mon 08-06',
-        8: 'Tue 09-06',
+        9: 'Tue 09-06',
         10: 'Wed 10-06',
         11: 'Thu 11-06',
         12: 'Fri 12-06',
@@ -448,12 +449,13 @@ def display_click_data2(feature):
     Output('cx1', 'children'),
     [Input('geojson', 'featureClick'),
      Input('my-slider','value')])
-def display_click_data(feature=None,value=None):
+def display_click_data(feature,value):
     global lastBuilding
     if not feature:
         return getBuildingData2(lastBuilding,value-1)
-    lastBuilding = feature["properties"]["name"]
     if not value:
+        lastBuilding = feature["properties"]["name"]
+        print(lastBuilding)
         return getBuildingData(feature["properties"]["name"])
     #getX(value)
     return getBuildingData2(feature["properties"]["name"],value-1)
