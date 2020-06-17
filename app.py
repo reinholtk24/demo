@@ -426,7 +426,7 @@ app.layout = html.Div([html.H1("CU Boulder Occupancy Map 2020"),dl.Map(id="map",
     ),
     html.Div(id='slider-output-container'),html.Div(
                 id='cx1'
-                )],
+                ),html.Div(id='txt')],
     style={'width': '60%', 'height': '50vh', 'margin': "auto", "display": "block", "font-weight": "bold"})
 
 #On hover, we display the name of the building
@@ -446,19 +446,20 @@ def display_click_data2(feature):
 """
 
 @app.callback(
-    Output('cx1', 'children'),
+    [Output('cx1', 'children'),
+     Output('txt', 'children')]
     [Input('geojson', 'featureClick'),
      Input('my-slider','value')])
 def display_click_data(feature,value):
     global lastBuilding
     if not feature:
-        return getBuildingData2(lastBuilding,value-1)
+        return getBuildingData2(lastBuilding,value-1),lastBuilding
     if not value:
         lastBuilding = feature["properties"]["name"]
-        return getBuildingData(feature["properties"]["name"])
+        return getBuildingData(feature["properties"]["name"]),lastBuilding
     #getX(value)
-    lastBuilding = feature["properties"]["name"]
-    return getBuildingData2(feature["properties"]["name"],value-1)
+    
+    return getBuildingData2(feature["properties"]["name"],value-1),lastBuilding
 
 """
 @app.callback(
