@@ -13,9 +13,6 @@ import datetime
 import calendar
 import os
 from random import randint
-
-import plotly.plotly as py
-from plotly.graph_objs import *
   
 def findDay(date):
     date = date.replace("-"," ")
