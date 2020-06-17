@@ -315,13 +315,9 @@ def getBuildingData2(bName,val):
     #med = np.median(ys)
 
     #Uncomment for threshold
-    """
-    fig.add_trace(go.Scatter(
-        x=[xs[int(len(xs)/2)-1]],
-        y=[29],
-        text=["Occupancy Threshold"],
-        mode="text",
-    ))"""
+    if len(xs) == 0:
+        return
+
     fig.update_layout(title=bName + " Occupancy over Time",shapes=[
     dict(
       type= 'line',
@@ -334,28 +330,6 @@ def getBuildingData2(bName,val):
             )
         )
     ])
-    
-    #Uncomment for threshold
-    """
-    fig.add_trace(go.Scatter(
-        x=[xs[int(len(xs)/2)-1]],
-        y=[29],
-        text=["Occupancy Threshold"],
-        mode="text",
-    ))
-    fig.update_layout(title=bName + " Occupancy over Time",shapes=[
-    dict(
-      type= 'line',
-      yref= 'y', y0=30, y1=30,
-      xref= 'x', x0= -1, x1= len(xs),
-       line=dict(
-                color="Red",
-                width=4,
-                dash="dashdot",
-            )
-        )
-    ])
-    """
 
     return  html.Div(
             dcc.Graph(
@@ -453,8 +427,8 @@ def display_click_data(feature,value):
     global lastBuilding
     if not feature:
         return getBuildingData2(lastBuilding,value-1)
+    lastBuilding = feature["properties"]["name"]
     if not value:
-        lastBuilding = feature["properties"]["name"]
         return getBuildingData(feature["properties"]["name"])
     #getX(value)
     return getBuildingData2(feature["properties"]["name"],value-1)
