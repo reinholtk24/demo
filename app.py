@@ -457,7 +457,7 @@ def display_click_data(feature,value):
     if not value:
         return getBuildingData(feature["properties"]["name"])
     #getX(value)
-    return getBuildingData2(feature["properties"]["name"],value-1)
+    return 
 
 """
 @app.callback(
