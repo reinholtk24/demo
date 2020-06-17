@@ -256,6 +256,7 @@ def getBuildingData(bName):
                     meanYs.append(np.max(ys))
 
     fig = go.Figure(data=go.Scatter(x=xs, y=meanYs))
+    fig.update_layout(title=bName + " Occupancy over Time")
     #med = np.median(ys)
 
     return  html.Div(
@@ -265,6 +266,7 @@ def getBuildingData(bName):
 
 def getBuildingData2(bName,val):
     global data3
+    global currentValue
     datesList = []
     filteredDates = []
     xs = []
@@ -313,10 +315,7 @@ def getBuildingData2(bName,val):
     #med = np.median(ys)
 
     #Uncomment for threshold
-    if(len(xs) < 1):
-        return
-    print("len xs", len(xs))
-    print("val", val)
+
     fig.update_layout(title=bName + " Occupancy over Time",shapes=[
     dict(
       type= 'line',
@@ -399,44 +398,23 @@ app.layout = html.Div([html.H1("CU Boulder Occupancy Map 2020"),dl.Map(id="map",
     ),
     html.Div(id='slider-output-container'),html.Div(
                 id='cx1'
-                ),html.Div(id='store', style={'display': 'none'}),html.Div(id='store2', style={'display': 'none'}),html.Div(id='store3', style={'display': 'none'})],
+                ),html.Div(id="txt")],
     style={'width': '60%', 'height': '50vh', 'margin': "auto", "display": "block", "font-weight": "bold"})
 
 #On hover, we display the name of the building
-@app.callback([Output("info", "children"),Output('store2','children')], [Input("geojson", "featureHover")])
+@app.callback(Output("info", "children"), [Input("geojson", "featureHover")])
 def info_hover(feature):
-    return get_info(feature),feature["properties"]["name"]
-
-
-@app.callback(
-    Output('store3', 'children'),
-    [Input('geojson', 'featureClick')])
-def storeData(feature):
-    return feature["properties"]["name"]
+    return get_info(feature)
 
 @app.callback(
     Output('cx1', 'children'),
-    [Input('geojson', 'featureClick'),
-     Input('store','children'),
-     Input('store2','children'),
-     Input('store3','children')])
-def display_click_data(feature,data, data2, data3):
-    print(data)
-    if not data:
-        data = 15
-    if not feature:
-        if len(data2) > 0: 
-            return getBuildingData2(data2,int(data-1))
-        elif len(data3) > 0:
-            return getBuildingData2(data3,int(data-1))
-    
-    return getBuildingData2(feature["properties"]["name"],int(data-1))
-
+    [Input('geojson', 'featureClick')])
+def display_click_data(feature):
+    return getBuildingData(feature["properties"]["name"])
 
 
 @app.callback(
-    [dash.dependencies.Output('map', 'children'),
-     Output('store','children')],
+    dash.dependencies.Output('map', 'children'),
     [dash.dependencies.Input('my-slider', 'value')])
 def update_output(value):
     mapUpdate= [] 
@@ -449,7 +427,7 @@ def update_output(value):
     style={"position": "absolute", "top": "10px", "right": "10px", "z-index": "1000", "background":"white"})
     mapUpdate = [dl.TileLayer(), geojson, colorbar, info]
   
-    return mapUpdate, value
+    return mapUpdate
 
 
 if __name__ == '__main__':
