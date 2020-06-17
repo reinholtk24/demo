@@ -453,11 +453,11 @@ def display_click_data(feature,value):
     global lastBuilding
     if not feature:
         return getBuildingData2(lastBuilding,value-1)
-    lastBuilding = feature["properties"]["name"]
     if not value:
+        lastBuilding = feature["properties"]["name"]
         return getBuildingData(feature["properties"]["name"])
     #getX(value)
-    return 
+    return getBuildingData2(feature["properties"]["name"],value-1)
 
 """
 @app.callback(
