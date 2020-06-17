@@ -7,7 +7,7 @@ import random
 from dash.dependencies import Output, Input
 from dash_leaflet import express as dlx
 from pandas.io.json import json_normalize
-from plotly import graph_objs as go
+import plotly.graph_objs as go
 import numpy as np
 import datetime 
 import calendar
