@@ -449,7 +449,7 @@ def display_click_data2(feature):
     Output('cx1', 'children'),
     [Input('geojson', 'featureClick'),
      Input('my-slider','value')])
-def display_click_data(feature=None,value=None):
+def display_click_data(feature,value):
     global lastBuilding
     if not feature:
         return getBuildingData2(lastBuilding,value-1)
@@ -457,6 +457,7 @@ def display_click_data(feature=None,value=None):
         lastBuilding = feature["properties"]["name"]
         return getBuildingData(feature["properties"]["name"])
     #getX(value)
+    lastBuilding = feature["properties"]["name"]
     return getBuildingData2(feature["properties"]["name"],value-1)
 
 """
