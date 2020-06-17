@@ -257,6 +257,8 @@ def getBuildingData(bName):
 
     fig = go.Figure(data=go.Scatter(x=xs, y=meanYs))
     #med = np.median(ys)
+    fig.update_layout(title=bName + " Occupancy over Time")
+    
 
     return  html.Div(
             dcc.Graph(
@@ -314,7 +316,13 @@ def getBuildingData2(bName,val):
     #med = np.median(ys)
 
     #Uncomment for threshold
-
+    """
+    fig.add_trace(go.Scatter(
+        x=[xs[int(len(xs)/2)-1]],
+        y=[29],
+        text=["Occupancy Threshold"],
+        mode="text",
+    ))"""
     fig.update_layout(title=bName + " Occupancy over Time",shapes=[
     dict(
       type= 'line',
@@ -327,6 +335,28 @@ def getBuildingData2(bName,val):
             )
         )
     ])
+    
+    #Uncomment for threshold
+    """
+    fig.add_trace(go.Scatter(
+        x=[xs[int(len(xs)/2)-1]],
+        y=[29],
+        text=["Occupancy Threshold"],
+        mode="text",
+    ))
+    fig.update_layout(title=bName + " Occupancy over Time",shapes=[
+    dict(
+      type= 'line',
+      yref= 'y', y0=30, y1=30,
+      xref= 'x', x0= -1, x1= len(xs),
+       line=dict(
+                color="Red",
+                width=4,
+                dash="dashdot",
+            )
+        )
+    ])
+    """
 
     return  html.Div(
             dcc.Graph(
@@ -397,7 +427,7 @@ app.layout = html.Div([html.H1("CU Boulder Occupancy Map 2020"),dl.Map(id="map",
     ),
     html.Div(id='slider-output-container'),html.Div(
                 id='cx1'
-                ),html.Div(id="txt")],
+                ),html.Div(id='txt')],
     style={'width': '60%', 'height': '50vh', 'margin': "auto", "display": "block", "font-weight": "bold"})
 
 #On hover, we display the name of the building
@@ -405,13 +435,45 @@ app.layout = html.Div([html.H1("CU Boulder Occupancy Map 2020"),dl.Map(id="map",
 def info_hover(feature):
     return get_info(feature)
 
+#Prints building id when clicked. The id was set in the original gis data file. Printing "something" to show that the information can be accessed. 
+"""
+@app.callback(
+    Output('map', 'children'),
+    [Input('geojson', 'featureClick')])
+def display_click_data2(feature):
+    if not feature:
+        return
+    return mapUpdate
+"""
+
 @app.callback(
     Output('cx1', 'children'),
-    [Input('geojson', 'featureClick')])
-def display_click_data(feature):
-    return getBuildingData(feature["properties"]["name"])
+    [Input('geojson', 'featureClick'),
+     Input('my-slider','value')])
+def display_click_data(feature,value):
+    global lastBuilding
+    if not feature:
+        return getBuildingData2(lastBuilding,value-1)
+    if not value:
+        lastBuilding = feature["properties"]["name"]
+        return getBuildingData(feature["properties"]["name"])
+    #getX(value)
+    
+    return getBuildingData2(feature["properties"]["name"],value-1)
 
+"""
+@app.callback(
+    dash.dependencies.Output('cx1', 'children'),
+    [dash.dependencies.Input('my-slider', 'value')])
+def add_vertical_line(value):
+    return 
 
+@app.callback(
+    dash.dependencies.Output('slider-output-container', 'children'),
+    [dash.dependencies.Input('my-slider', 'value')])
+def update_output(value):
+    return 'You have selected "{}"'.format(value)
+"""
 @app.callback(
     dash.dependencies.Output('map', 'children'),
     [dash.dependencies.Input('my-slider', 'value')])
