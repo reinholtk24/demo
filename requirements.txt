@@ -6,5 +6,5 @@ dash-html-components>=0.13.2
 dash-core-components>=0.38.1
 dash-leaflet==0.0.17
 pandas==1.0.4
-requests==2.23.0
+requests==2.31.0
 
